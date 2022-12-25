@@ -37,19 +37,18 @@ describe("Todo Application", function () {
 
   test("Marks a todo with the given ID as complete", async () => {
     const response = await agent.post("/todos").send({
-      title: "Buy milk",
+      title: "Do Homework",
       dueDate: new Date().toISOString(),
       completed: false,
     });
     const parsedResponse = JSON.parse(response.text);
     const todoID = parsedResponse.id;
-
     expect(parsedResponse.completed).toBe(false);
 
-    const markCompleteResponse = await agent
+    const changeTodo = await agent
       .put(`/todos/${todoID}/markASCompleted`)
       .send();
-    const parsedUpdateResponse = JSON.parse(markCompleteResponse.text);
+    const parsedUpdateResponse = JSON.parse(changeTodo.text);
     expect(parsedUpdateResponse.completed).toBe(true);
   });
 
@@ -73,15 +72,15 @@ describe("Todo Application", function () {
 
   test("Delete todo using ID", async () => {
     const response = await agent.post("/todos").send({
-      title: "Delete todo",
+      title: "Buy xbox",
       dueDate: new Date().toISOString(),
       completed: false,
     });
     const parsedResponse = JSON.parse(response.text);
     const todoID = parsedResponse.id;
-    expect(parsedResponse.title).toBe("Delete todo");
-    const deletetodo = await agent.delete(`/todos/${todoID}`);
-    const parsedremoveResponse = JSON.parse(deletetodo.text);
-    expect(parsedremoveResponse).toBe(true);
+  
+    const res = await agent.delete(`/todos/${todoID}`).send();
+    const bool = Boolean(res.text);
+    expect(bool).toBe(true);
   });
 });
